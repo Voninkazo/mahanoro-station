@@ -1,10 +1,11 @@
 import React from 'react';
 import {Route, Switch } from 'react-router-dom';
-import AccountContainer from './containers/account';
 
 import Header from './containers/header';
+import NextTripsContainer from './containers/nextTrips';
 import Account from './pages/account';
 import Home from './pages/home';
+// import BookSeats from './pages/bookSeats';
 
 function App() {
     return (
@@ -13,6 +14,12 @@ function App() {
             <Switch>
                 <Route exact path="/">
                     <Home />
+                </Route>
+                <Route exact path="/:dest">
+                    <NextTripsContainer />
+                </Route>
+                <Route path="/dest/:id">
+                   
                 </Route>
                 <Route path="/account">
                     <Account />
