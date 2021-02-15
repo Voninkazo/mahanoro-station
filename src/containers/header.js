@@ -13,7 +13,7 @@ function HeaderContainer() {
                     <Header.Title>Mahanoro station</Header.Title>
                 </Header.Group>
             </Link>
-            <Link to="/account">
+            <Link to="/account/accountId/">
                 <Header.SubTitle>My account</Header.SubTitle>
             </Link>
         </Header>

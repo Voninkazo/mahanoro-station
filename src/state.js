@@ -15,4 +15,11 @@ export default {
         }
     ],
     chosenSeats: [],
+    user: {
+        userId: 462786788299,
+        firstName: "Me",
+        lastName: "Somebody",
+        phoneNumber: 4837482789,
+    },
+    bookings: [],
 }

@@ -4,3 +4,10 @@ export function bookSeats(seat) {
         payload: seat,
     }
 }
+
+export function  confirmBooking(seatId) {
+    return {
+        type: "CONFIRM_BOOKING",
+        paylod: seatId,
+    }
+}

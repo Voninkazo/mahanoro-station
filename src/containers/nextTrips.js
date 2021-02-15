@@ -25,10 +25,6 @@ export default function NextTripsContainer() {
         dispatch(getData());
     },[])
 
-    // const elemet = nextTrips.map(trip => {
-    //     <BookSeatscontainer key={trip.id} trip={trip} />
-    // })
-
     return (
         <div>
             <img src={Clock} alt="Clock"/>
@@ -48,7 +44,12 @@ export default function NextTripsContainer() {
                                 </li>
                                 <li>
                                 <Link to={`/trip/${trip.id}`}>
-                                    <button>Book a seat</button>
+                                    <button 
+                                        type="button" 
+                                        disabled={trip.seats.filter(seat => seat.isAvailable == true).length === 0}
+                                        >
+                                        Book a seat
+                                    </button>
                                 </Link>
                                 </li>
                             </ul>

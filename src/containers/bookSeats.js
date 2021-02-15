@@ -8,7 +8,10 @@ import ChosenSeat from '../icons/chosen_seat.svg';
 import CarLogo from '../icons/car_logo.svg';
 
 import ChooseSeats from '../components/chooseSeats';
+import ConfirmationModalContainer from './confirmationModal';
+
 import { bookSeats } from '../actions/seats';
+import {displayModal} from '../actions/modal';
 
 function BookSeatscontainer() {
     const cities = useSelector(state => state.cities);
@@ -16,6 +19,9 @@ function BookSeatscontainer() {
 
     const chosenSeats = useSelector(state => state.chosenSeats);
     console.log(chosenSeats);
+
+    const showModal = useSelector(state => state.showModal);
+    console.log(showModal);
 
     const dispatch = useDispatch();
 
@@ -58,7 +64,7 @@ function BookSeatscontainer() {
                                 else {
                                     return <ChooseSeats.SeatIcon
                                     src={AvailbaleSeat}
-                                    onClick={() => dispatch(bookSeats(seat))}
+                                    onClick={() => {dispatch(bookSeats(seat))}}
                                 />
                                 }
                                 }
@@ -100,10 +106,19 @@ function BookSeatscontainer() {
                             </ChooseSeats.List>
                     </ChooseSeats.DetailContainer>
                     <ChooseSeats.Price>{newCity[0]?.price}Ar/seat</ChooseSeats.Price>
-                    <ChooseSeats.Button>Book {chosenSeats.length} seats</ChooseSeats.Button>
+                    <ChooseSeats.Button
+                        type="button"
+                        onClick={() => dispatch(displayModal(true))} 
+                    >
+                        Book {chosenSeats.length} seats
+                    </ChooseSeats.Button>
                         <ChooseSeats.TotalAmount>TOTAL: {total}Ar</ChooseSeats.TotalAmount>
                 </ChooseSeats.TripDetails>
             </ChooseSeats.Pane>
+            {
+                showModal &&
+                <ConfirmationModalContainer />
+            }
         </ChooseSeats>
     )
 }
