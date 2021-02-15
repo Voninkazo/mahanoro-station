@@ -14,4 +14,5 @@ export default {
             city: "Vatomandry"
         }
     ],
+    chosenSeats: [],
 }
