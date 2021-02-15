@@ -14,14 +14,10 @@ function CitiesContainer() {
     return (
         <Cities>
             {
-                destination.map(dest => {
+                destination.map(city => {
                     return (
-                    <Link to={`/${dest}`}  key={dest}>
-                        <Cities.Button 
-                            value={dest}
-                            >
-                            {dest}
-                        </Cities.Button>
+                    <Link to={`/${city.city}`}  key={city.id}>
+                        <Cities.Button >{city.city}</Cities.Button>
                     </Link>
                     )
                 })

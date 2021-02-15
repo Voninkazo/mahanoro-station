@@ -5,7 +5,7 @@ import Header from './containers/header';
 import NextTripsContainer from './containers/nextTrips';
 import Account from './pages/account';
 import Home from './pages/home';
-// import BookSeats from './pages/bookSeats';
+import BookSeats from './pages/bookSeats';
 
 function App() {
     return (
@@ -18,8 +18,8 @@ function App() {
                 <Route exact path="/:dest">
                     <NextTripsContainer />
                 </Route>
-                <Route path="/dest/:id">
-                   
+                <Route path="/trip/:tripId">
+                   <BookSeats />
                 </Route>
                 <Route path="/account">
                     <Account />

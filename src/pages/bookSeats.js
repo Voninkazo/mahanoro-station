@@ -1,11 +1,11 @@
-// import React from 'react'
+import React from 'react'
 
-// import BookSeatscontainer from '../containers/bookSeats';
+import BookSeatscontainer from '../containers/bookSeats';
 
-// function BookSeats() {
-//     return (
-//         <BookSeatscontainer />
-//     )
-// }
+function BookSeats() {
+    return (
+        <BookSeatscontainer />
+    )
+}
 
-// export default BookSeats
+export default BookSeats
