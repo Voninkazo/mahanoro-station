@@ -4,21 +4,26 @@ import {useSelector} from 'react-redux';
 import { useParams } from 'react-router';
 
 import {getData} from '../actions/data';
+// import {bookTrips} from '../actions/seats';
 import Clock from '../icons/clock.svg';
 import dateFormated from '../dateFormator';
+import NextTrips from '../components/nextTrips';
 import { Link } from 'react-router-dom';
 
 export default function NextTripsContainer() {
 
-    const cities = useSelector(state => state.cities);
-    console.log(cities);
+    const trips = useSelector(state => state.trips);
+    console.log(trips);
+
+    // const bookedTrips = useSelector(state => state.bookedTrips);
+    // console.log(bookedTrips);
 
     const dispatch = useDispatch();
 
     const {dest} = useParams();
     console.log(dest)
 
-    const nextTrips = cities.filter(city => city.destination === dest);
+    const nextTrips = trips.filter(city => city.destination === dest);
     console.log(nextTrips);
     
     useEffect(() => {
@@ -26,37 +31,37 @@ export default function NextTripsContainer() {
     },[])
 
     return (
-        <div>
-            <img src={Clock} alt="Clock"/>
-            <h3>Next trips to {dest}</h3>
+        <NextTrips>
+            <NextTrips.Clock src={Clock} alt="Clock"/>
+            <NextTrips.Title>Next trips to {dest}</NextTrips.Title>
             {
                 nextTrips.map(trip => {
                     return (
-                        <div key={trip.id}>
-                            <img />
-                            <ul>
-                                <li> {dateFormated(trip.departureTime)}</li>
-                                <li>
+                        <NextTrips.Wrapper key={trip.id}>
+                            <NextTrips.CarLogo />
+                            <NextTrips.ListContainer>
+                                <NextTrips.DepartureTime> {dateFormated(trip.departureTime)}</NextTrips.DepartureTime>
+                                <NextTrips.NumOfSeats>
                                     {
                                     trip.seats.filter(seat => seat.isAvailable == true).length
                                     }
                                     seats left
-                                </li>
-                                <li>
+                                </NextTrips.NumOfSeats>
+                                <>
                                 <Link to={`/trip/${trip.id}`}>
-                                    <button 
+                                    <NextTrips.Button 
                                         type="button" 
                                         disabled={trip.seats.filter(seat => seat.isAvailable == true).length === 0}
                                         >
                                         Book a seat
-                                    </button>
+                                    </NextTrips.Button>
                                 </Link>
-                                </li>
-                            </ul>
-                        </div>
+                                </>
+                            </NextTrips.ListContainer>
+                        </NextTrips.Wrapper>
                     )
                 })
             }
-        </div>
+        </NextTrips>
     )
 }

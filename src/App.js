@@ -21,7 +21,7 @@ function App() {
                 <Route path="/trip/:tripId">
                    <BookSeats />
                 </Route>
-                <Route path="/account">
+                <Route path="/account/:accountId">
                     <Account />
                 </Route>
             </Switch>

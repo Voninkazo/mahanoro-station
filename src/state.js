@@ -1,5 +1,6 @@
 export default {
-    cities: [],
+    trips: [],
+    bookedTrips: [],
     destination: [
         {   id: 0,
             city: "Antananarivo"
@@ -21,5 +22,4 @@ export default {
         lastName: "Somebody",
         phoneNumber: 4837482789,
     },
-    bookings: [],
 }

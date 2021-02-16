@@ -39074,7 +39074,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 var _default = {
-  cities: [],
+  trips: [],
+  bookedTrips: [],
   destination: [{
     id: 0,
     city: "Antananarivo"
@@ -39094,8 +39095,7 @@ var _default = {
     firstName: "Me",
     lastName: "Somebody",
     phoneNumber: 4837482789
-  },
-  bookings: []
+  }
 };
 exports.default = _default;
 },{}],"src/reducers/dataReducers.js":[function(require,module,exports) {
@@ -39104,9 +39104,9 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = cities;
+exports.default = trips;
 
-function cities(state = [], action) {
+function trips(state = [], action) {
   switch (action.type) {
     case "GET_DATA":
       return action.payload;
@@ -39136,14 +39136,14 @@ exports.default = chosenSeats;
 
 function chosenSeats(state = [], action) {
   switch (action.type) {
-    case "BOOK_SEAT":
+    case "BOOK_SEATS":
       console.log(state);
       return [...state, action.payload];
 
     case "CONFIRM_BOOKING":
       console.log(state);
       const newArr = state.map(seat => {
-        if (seat.id === action.payload) {
+        if (seat.id == action.payload) {
           return { ...seat,
             isAvailable: false
           };
@@ -39154,6 +39154,19 @@ function chosenSeats(state = [], action) {
       });
       console.log(newArr);
       return newArr;
+
+    case "REMOVE_SEAT":
+      const newSeats = state.map(seat => {
+        if (seat.id == action.payload) {
+          return { ...seat,
+            isAvailable: true
+          };
+        }
+
+        ;
+        return seat;
+      });
+      return newSeats;
 
     default:
       return state;
@@ -39190,7 +39203,70 @@ function user(state = {}, action) {
 
 var _default = user;
 exports.default = _default;
-},{}],"src/reducers/index.js":[function(require,module,exports) {
+},{}],"src/actions/seats.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.bookSeats = bookSeats;
+exports.bookTrips = bookTrips;
+exports.removeSeats = removeSeats;
+exports.confirmBooking = confirmBooking;
+
+function bookSeats(seat) {
+  return {
+    type: "BOOK_SEATS",
+    payload: seat
+  };
+}
+
+function bookTrips(trip) {
+  return {
+    type: "BOOK_TRIP",
+    payload: trip
+  };
+} // export function  pickSeats() {
+//     return {
+//         type: "PICK_SEATS",
+//     }
+// }
+
+
+function removeSeats(id) {
+  return {
+    type: "REMOVE_SEAT",
+    payload: id
+  };
+}
+
+function confirmBooking(seatId) {
+  return {
+    type: "CONFIRM_BOOKING",
+    paylod: seatId
+  };
+}
+},{}],"src/reducers/tripsReducers.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = bookedTrips;
+
+var _seats = require("../actions/seats");
+
+function bookedTrips(state = [], action) {
+  switch (action.type) {
+    case "BOOK_TRIP":
+      console.log(bookedTrips);
+      return [...state, action.payload];
+
+    default:
+      return state;
+  }
+}
+},{"../actions/seats":"src/actions/seats.js"}],"src/reducers/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -39210,18 +39286,21 @@ var _modalReducers = _interopRequireDefault(require("./modalReducers"));
 
 var _userReducer = _interopRequireDefault(require("./userReducer"));
 
+var _tripsReducers = _interopRequireDefault(require("./tripsReducers"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _default = (0, _redux.combineReducers)({
-  cities: _dataReducers.default,
+  trips: _dataReducers.default,
   destination: _citiesReducers.default,
   chosenSeats: _seatsReducers.default,
   showModal: _modalReducers.default,
-  user: _userReducer.default
+  user: _userReducer.default,
+  bookedTrips: _tripsReducers.default
 });
 
 exports.default = _default;
-},{"redux":"node_modules/redux/es/redux.js","./dataReducers":"src/reducers/dataReducers.js","./citiesReducers":"src/reducers/citiesReducers.js","./seatsReducers":"src/reducers/seatsReducers.js","./modalReducers":"src/reducers/modalReducers.js","./userReducer":"src/reducers/userReducer.js"}],"src/store.js":[function(require,module,exports) {
+},{"redux":"node_modules/redux/es/redux.js","./dataReducers":"src/reducers/dataReducers.js","./citiesReducers":"src/reducers/citiesReducers.js","./seatsReducers":"src/reducers/seatsReducers.js","./modalReducers":"src/reducers/modalReducers.js","./userReducer":"src/reducers/userReducer.js","./tripsReducers":"src/reducers/tripsReducers.js"}],"src/store.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -57681,7 +57760,142 @@ const dateFormated = date => {
 
 var _default = dateFormated;
 exports.default = _default;
-},{"date-fns":"node_modules/date-fns/esm/index.js"}],"src/containers/nextTrips.js":[function(require,module,exports) {
+},{"date-fns":"node_modules/date-fns/esm/index.js"}],"src/components/nextTrips/styles/nextTrips.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Button = exports.NumOfSeats = exports.DepartureTime = exports.ListContainer = exports.CarLogo = exports.Wrapper = exports.Title = exports.Clock = exports.Container = void 0;
+
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const Container = _styledComponents.default.div`
+
+`;
+exports.Container = Container;
+const Clock = _styledComponents.default.img`
+
+`;
+exports.Clock = Clock;
+const Title = _styledComponents.default.h3`
+
+`;
+exports.Title = Title;
+const Wrapper = _styledComponents.default.div`
+
+`;
+exports.Wrapper = Wrapper;
+const CarLogo = _styledComponents.default.img`
+
+`;
+exports.CarLogo = CarLogo;
+const ListContainer = _styledComponents.default.ul`
+
+`;
+exports.ListContainer = ListContainer;
+const DepartureTime = _styledComponents.default.li`
+
+`;
+exports.DepartureTime = DepartureTime;
+const NumOfSeats = _styledComponents.default.li`
+
+`;
+exports.NumOfSeats = NumOfSeats;
+const Button = _styledComponents.default.button`
+
+`;
+exports.Button = Button;
+},{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"src/components/nextTrips/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _nextTrips = require("./styles/nextTrips");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function NextTrips({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_nextTrips.Container, restProps, children);
+}
+
+NextTrips.Clock = function NextTripsClock({
+  children,
+  ...restProps
+}) {
+  /*#__PURE__*/
+  _react.default.createElement(_nextTrips.Clock, restProps);
+};
+
+NextTrips.Title = function NextTripsTitle({
+  children,
+  ...restProps
+}) {
+  /*#__PURE__*/
+  _react.default.createElement(_nextTrips.Title, restProps, children);
+};
+
+NextTrips.Wrapper = function NextTripsWrapper({
+  children,
+  ...restProps
+}) {
+  /*#__PURE__*/
+  _react.default.createElement(_nextTrips.Wrapper, restProps, children);
+};
+
+NextTrips.CarLogo = function NextTripsCarLogo({
+  children,
+  ...restProps
+}) {
+  /*#__PURE__*/
+  _react.default.createElement(_nextTrips.CarLogo, restProps);
+};
+
+NextTrips.ListContainer = function NextTripsListContainer({
+  children,
+  ...restProps
+}) {
+  /*#__PURE__*/
+  _react.default.createElement(_nextTrips.ListContainer, restProps, children);
+};
+
+NextTrips.DepartureTime = function NextTripsDepartureTime({
+  children,
+  ...restProps
+}) {
+  /*#__PURE__*/
+  _react.default.createElement(_nextTrips.DepartureTime, restProps, children);
+};
+
+NextTrips.NumOfSeats = function NextTripsNumOfSeats({
+  children,
+  ...restProps
+}) {
+  /*#__PURE__*/
+  _react.default.createElement(_nextTrips.NumOfSeats, restProps, children);
+};
+
+NextTrips.Button = function NextTripsButton({
+  children,
+  ...restProps
+}) {
+  /*#__PURE__*/
+  _react.default.createElement(_nextTrips.Button, restProps, children);
+};
+
+var _default = NextTrips;
+exports.default = _default;
+},{"react":"node_modules/react/index.js","./styles/nextTrips":"src/components/nextTrips/styles/nextTrips.js"}],"src/containers/nextTrips.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -57701,6 +57915,8 @@ var _clock = _interopRequireDefault(require("../icons/clock.svg"));
 
 var _dateFormator = _interopRequireDefault(require("../dateFormator"));
 
+var _nextTrips = _interopRequireDefault(require("../components/nextTrips"));
+
 var _reactRouterDom = require("react-router-dom");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -57709,34 +57925,264 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
+// import {bookTrips} from '../actions/seats';
 function NextTripsContainer() {
-  const cities = (0, _reactRedux.useSelector)(state => state.cities);
-  console.log(cities);
+  const trips = (0, _reactRedux.useSelector)(state => state.trips);
+  console.log(trips); // const bookedTrips = useSelector(state => state.bookedTrips);
+  // console.log(bookedTrips);
+
   const dispatch = (0, _reactRedux.useDispatch)();
   const {
     dest
   } = (0, _reactRouter.useParams)();
   console.log(dest);
-  const nextTrips = cities.filter(city => city.destination === dest);
+  const nextTrips = trips.filter(city => city.destination === dest);
   console.log(nextTrips);
   (0, _react.useEffect)(() => {
     dispatch((0, _data.getData)());
   }, []);
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("img", {
+  return /*#__PURE__*/_react.default.createElement(_nextTrips.default, null, /*#__PURE__*/_react.default.createElement(_nextTrips.default.Clock, {
     src: _clock.default,
     alt: "Clock"
-  }), /*#__PURE__*/_react.default.createElement("h3", null, "Next trips to ", dest), nextTrips.map(trip => {
-    return /*#__PURE__*/_react.default.createElement("div", {
+  }), /*#__PURE__*/_react.default.createElement(_nextTrips.default.Title, null, "Next trips to ", dest), nextTrips.map(trip => {
+    return /*#__PURE__*/_react.default.createElement(_nextTrips.default.Wrapper, {
       key: trip.id
-    }, /*#__PURE__*/_react.default.createElement("img", null), /*#__PURE__*/_react.default.createElement("ul", null, /*#__PURE__*/_react.default.createElement("li", null, " ", (0, _dateFormator.default)(trip.departureTime)), /*#__PURE__*/_react.default.createElement("li", null, trip.seats.filter(seat => seat.isAvailable == true).length, "seats left"), /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+    }, /*#__PURE__*/_react.default.createElement(_nextTrips.default.CarLogo, null), /*#__PURE__*/_react.default.createElement(_nextTrips.default.ListContainer, null, /*#__PURE__*/_react.default.createElement(_nextTrips.default.DepartureTime, null, " ", (0, _dateFormator.default)(trip.departureTime)), /*#__PURE__*/_react.default.createElement(_nextTrips.default.NumOfSeats, null, trip.seats.filter(seat => seat.isAvailable == true).length, "seats left"), /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
       to: `/trip/${trip.id}`
-    }, /*#__PURE__*/_react.default.createElement("button", {
+    }, /*#__PURE__*/_react.default.createElement(_nextTrips.default.Button, {
       type: "button",
       disabled: trip.seats.filter(seat => seat.isAvailable == true).length === 0
     }, "Book a seat")))));
   }));
 }
-},{"react":"node_modules/react/index.js","react-redux":"node_modules/react-redux/es/index.js","react-router":"node_modules/react-router/esm/react-router.js","../actions/data":"src/actions/data.js","../icons/clock.svg":"src/icons/clock.svg","../dateFormator":"src/dateFormator.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js"}],"src/icons/page.svg":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-redux":"node_modules/react-redux/es/index.js","react-router":"node_modules/react-router/esm/react-router.js","../actions/data":"src/actions/data.js","../icons/clock.svg":"src/icons/clock.svg","../dateFormator":"src/dateFormator.js","../components/nextTrips":"src/components/nextTrips/index.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js"}],"src/components/myAccount/styles/myAccount.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Bookings = exports.ButtonSubmit = exports.ListItem = exports.Label = exports.InputText = exports.InputContainer = exports.Form = exports.SubTitle = exports.Group = exports.PersonalInfo = exports.Pane = exports.Wrapper = exports.LastName = exports.FirstName = exports.UserInfo = exports.Title = exports.PageLogo = exports.Container = void 0;
+
+var _styledComponents = _interopRequireDefault(require("styled-components"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const Container = _styledComponents.default.div`
+
+`;
+exports.Container = Container;
+const PageLogo = _styledComponents.default.img`
+
+`;
+exports.PageLogo = PageLogo;
+const Title = _styledComponents.default.h3`
+
+`;
+exports.Title = Title;
+const UserInfo = _styledComponents.default.p`
+
+`;
+exports.UserInfo = UserInfo;
+const FirstName = _styledComponents.default.span`
+
+`;
+exports.FirstName = FirstName;
+const LastName = _styledComponents.default.span`
+
+`;
+exports.LastName = LastName;
+const Wrapper = _styledComponents.default.div`
+
+`;
+exports.Wrapper = Wrapper;
+const Pane = _styledComponents.default.div`
+
+`;
+exports.Pane = Pane;
+const PersonalInfo = _styledComponents.default.div`
+
+`;
+exports.PersonalInfo = PersonalInfo;
+const Group = _styledComponents.default.div`
+
+`;
+exports.Group = Group;
+const SubTitle = _styledComponents.default.h4`
+
+`;
+exports.SubTitle = SubTitle;
+const Form = _styledComponents.default.form`
+
+`;
+exports.Form = Form;
+const InputContainer = _styledComponents.default.ul`
+
+`;
+exports.InputContainer = InputContainer;
+const InputText = _styledComponents.default.input`
+
+`;
+exports.InputText = InputText;
+const Label = _styledComponents.default.label`
+
+`;
+exports.Label = Label;
+const ListItem = _styledComponents.default.li`
+
+`;
+exports.ListItem = ListItem;
+const ButtonSubmit = _styledComponents.default.button`
+
+`;
+exports.ButtonSubmit = ButtonSubmit;
+const Bookings = _styledComponents.default.div`
+
+`;
+exports.Bookings = Bookings;
+},{"styled-components":"node_modules/styled-components/dist/styled-components.browser.esm.js"}],"src/components/myAccount/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _react = _interopRequireDefault(require("react"));
+
+var _myAccount = require("./styles/myAccount");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function MyAccount({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.Container, restProps, children);
+}
+
+MyAccount.PageLogo = function MyAccountPageLogo({ ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.PageLogo, restProps);
+};
+
+MyAccount.Title = function MyAccountTitle({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.Title, restProps, children);
+};
+
+MyAccount.UserInfo = function MyAccountUserInfo({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.UserInfo, restProps, children);
+};
+
+MyAccount.FirstName = function MyAccountFirstName({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.FirstName, restProps, children);
+};
+
+MyAccount.LastName = function MyAccountLastName({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.LastName, restProps, children);
+};
+
+MyAccount.Wrapper = function MyAccountWrapper({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.Wrapper, restProps, children);
+};
+
+MyAccount.Pane = function MyAccountPane({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.Pane, restProps, children);
+};
+
+MyAccount.PersonalInfo = function MyAccountPersonalInfo({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.PersonalInfo, restProps, children);
+};
+
+MyAccount.SubTitle = function MyAccountSubTitle({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.SubTitle, restProps, children);
+};
+
+MyAccount.Form = function MyAccountForm({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.Form, restProps, children);
+};
+
+MyAccount.InputContainer = function MyAccountInputContainer({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.InputContainer, restProps, children);
+};
+
+MyAccount.ListItem = function MyAccountListItem({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.ListItem, restProps, children);
+};
+
+MyAccount.Label = function MyAccountLabel({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.Label, restProps, children);
+};
+
+MyAccount.InputText = function MyAccountInputText({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.InputText, restProps, children);
+};
+
+MyAccount.ButtonSubmit = function MyAccountButtonSubmit({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.ButtonSubmit, restProps, children);
+};
+
+MyAccount.Bookings = function MyAccountBookings({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.Bookings, restProps, children);
+};
+
+MyAccount.Group = function MyAccountGroup({
+  children,
+  ...restProps
+}) {
+  return /*#__PURE__*/_react.default.createElement(_myAccount.Group, restProps, children);
+}; // MyAccount.Title = function  MyAccountTitle({children, ...restProps}) {
+//     return <Title {...restProps}>{children}</Title>
+// }
+
+
+var _default = MyAccount;
+exports.default = _default;
+},{"react":"node_modules/react/index.js","./styles/myAccount":"src/components/myAccount/styles/myAccount.js"}],"src/icons/page.svg":[function(require,module,exports) {
 module.exports = "/page.a9510ddd.svg";
 },{}],"src/containers/account.js":[function(require,module,exports) {
 "use strict";
@@ -57750,6 +58196,10 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactRedux = require("react-redux");
 
+var _reactRouter = require("react-router");
+
+var _myAccount = _interopRequireDefault(require("../components/myAccount"));
+
 var _page = _interopRequireDefault(require("../icons/page.svg"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -57757,29 +58207,40 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function AccountContainer() {
   const user = (0, _reactRedux.useSelector)(state => state.user);
   console.log(user);
-  return /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("img", {
+  const chosenSeats = (0, _reactRedux.useSelector)(state => state.chosenSeats);
+  console.log(chosenSeats);
+  const bookedTrips = (0, _reactRedux.useSelector)(state => state.bookedTrips);
+  console.log(bookedTrips);
+  const trips = (0, _reactRedux.useSelector)(state => state.trips);
+  const {
+    accountId
+  } = (0, _reactRouter.useParams)();
+  console.log(accountId);
+  const myBooking = trips.find(booking => booking.id == accountId);
+  console.log(myBooking);
+  return /*#__PURE__*/_react.default.createElement(_myAccount.default, null, /*#__PURE__*/_react.default.createElement(_myAccount.default.PageLogo, {
     src: _page.default
-  }), /*#__PURE__*/_react.default.createElement("h3", null, "My account:"), /*#__PURE__*/_react.default.createElement("p", null, /*#__PURE__*/_react.default.createElement("span", null, user.firstName), /*#__PURE__*/_react.default.createElement("span", null, user.lastName)), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h4", null, "MY PERSONAL INFORMATIONS:"), /*#__PURE__*/_react.default.createElement("form", null, /*#__PURE__*/_react.default.createElement("ul", null, /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("label", null, "First Name"), /*#__PURE__*/_react.default.createElement("input", {
+  }), /*#__PURE__*/_react.default.createElement(_myAccount.default.Title, null, "My account:"), /*#__PURE__*/_react.default.createElement(_myAccount.default.UserInfo, null, /*#__PURE__*/_react.default.createElement(_myAccount.default.FirstName, null, user.firstName), /*#__PURE__*/_react.default.createElement(_myAccount.default.LastName, null, user.lastName)), /*#__PURE__*/_react.default.createElement(_myAccount.default.Pane, null, /*#__PURE__*/_react.default.createElement(_myAccount.default.SubTitle, null, "MY PERSONAL INFORMATIONS:"), /*#__PURE__*/_react.default.createElement(_myAccount.default.Form, null, /*#__PURE__*/_react.default.createElement(_myAccount.default.InputContainer, null, /*#__PURE__*/_react.default.createElement(_myAccount.default.ListItem, null, /*#__PURE__*/_react.default.createElement(_myAccount.default.Label, null, "First Name"), /*#__PURE__*/_react.default.createElement(_myAccount.default.InputText, {
     type: "text",
     name: "firstName",
     id: "firstName",
     value: user.firstName
-  })), /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("label", null, "Last Name"), /*#__PURE__*/_react.default.createElement("input", {
+  })), /*#__PURE__*/_react.default.createElement(_myAccount.default.ListItem, null, /*#__PURE__*/_react.default.createElement("label", null, "Last Name"), /*#__PURE__*/_react.default.createElement(_myAccount.default.InputText, {
     type: "text",
     name: "lastName",
     id: "lastName",
     value: user.lastName
-  })), /*#__PURE__*/_react.default.createElement("li", null, /*#__PURE__*/_react.default.createElement("label", null, "Phone Number"), /*#__PURE__*/_react.default.createElement("input", {
+  })), /*#__PURE__*/_react.default.createElement(_myAccount.default.ListItem, null, /*#__PURE__*/_react.default.createElement("label", null, "Phone Number"), /*#__PURE__*/_react.default.createElement(MyAccountMyAccount.ListItemnputText, {
     type: "text",
     name: "phoneNumber",
     id: "phoneNumber",
     value: user.phoneNumber
-  }))), /*#__PURE__*/_react.default.createElement("button", null, "Update"))), /*#__PURE__*/_react.default.createElement("div", null, /*#__PURE__*/_react.default.createElement("h4", null, "MY BOOKINGS: "), /*#__PURE__*/_react.default.createElement("div", null)));
+  }))), /*#__PURE__*/_react.default.createElement(_myAccount.default.ButtonSubmit, null, "Update"))), /*#__PURE__*/_react.default.createElement(_myAccount.default.Pane, null, /*#__PURE__*/_react.default.createElement(_myAccount.default.SubTitle, null, "MY BOOKINGS: "), /*#__PURE__*/_react.default.createElement(_myAccount.default.Group, null, /*#__PURE__*/_react.default.createElement("p", null, myBooking?.destination), /*#__PURE__*/_react.default.createElement("p", null, chosenSeats.length))));
 }
 
 var _default = AccountContainer;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","react-redux":"node_modules/react-redux/es/index.js","../icons/page.svg":"src/icons/page.svg"}],"src/pages/account.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-redux":"node_modules/react-redux/es/index.js","react-router":"node_modules/react-router/esm/react-router.js","../components/myAccount":"src/components/myAccount/index.js","../icons/page.svg":"src/icons/page.svg"}],"src/pages/account.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -57907,6 +58368,10 @@ module.exports = "/unavailable_seat.d4e46235.svg";
 module.exports = "/chosen_seat.d63c0be2.svg";
 },{}],"src/icons/car_logo.svg":[function(require,module,exports) {
 module.exports = "/car_logo.3c6f0960.svg";
+},{}],"src/icons/icon_close.svg":[function(require,module,exports) {
+module.exports = "/icon_close.55b88fcc.svg";
+},{}],"src/icons/tick.svg":[function(require,module,exports) {
+module.exports = "/tick.5facd037.svg";
 },{}],"src/components/chooseSeats/styles/chooseSeats.js":[function(require,module,exports) {
 "use strict";
 
@@ -58278,78 +58743,7 @@ function displayModal() {
     type: "SHOW_MODAL"
   };
 }
-},{}],"src/actions/seats.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.bookSeats = bookSeats;
-exports.confirmBooking = confirmBooking;
-
-function bookSeats(seat) {
-  return {
-    type: "BOOK_SEAT",
-    payload: seat
-  };
-}
-
-function confirmBooking(seatId) {
-  return {
-    type: "CONFIRM_BOOKING",
-    paylod: seatId
-  };
-}
-},{}],"src/icons/icon_close.svg":[function(require,module,exports) {
-module.exports = "/icon_close.55b88fcc.svg";
-},{}],"src/icons/tick.svg":[function(require,module,exports) {
-module.exports = "/tick.5facd037.svg";
-},{}],"src/containers/confirmationModal.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _react = _interopRequireDefault(require("react"));
-
-var _reactRedux = require("react-redux");
-
-var _modal = _interopRequireDefault(require("../components/modal"));
-
-var _modal2 = require("../actions/modal");
-
-var _seats = require("../actions/seats");
-
-var _icon_close = _interopRequireDefault(require("../icons/icon_close.svg"));
-
-var _tick = _interopRequireDefault(require("../icons/tick.svg"));
-
-var _reactRouterDom = require("react-router-dom");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function ConfirmationModalContainer() {
-  const choseSeats = (0, _reactRedux.useSelector)(state => state.choseSeats);
-  const dispatch = (0, _reactRedux.useDispatch)();
-  return /*#__PURE__*/_react.default.createElement(_modal.default, null, /*#__PURE__*/_react.default.createElement(_modal.default.Wrapper, null, /*#__PURE__*/_react.default.createElement(_modal.default.IconClose, {
-    src: _icon_close.default,
-    onClick: () => dispatch((0, _modal2.displayModal)(false)),
-    alt: "Close"
-  }), /*#__PURE__*/_react.default.createElement(_modal.default.Heading, null, /*#__PURE__*/_react.default.createElement(_modal.default.IconTick, {
-    src: _tick.default
-  }), /*#__PURE__*/_react.default.createElement(_modal.default.Title, null, "BOOKING CONFIRMED!")), /*#__PURE__*/_react.default.createElement(_modal.default.Text, null, "Thank you for trusting our services. Your booking has been added to your account. You can review it there."), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
-    to: "/account/accountId/"
-  }, /*#__PURE__*/_react.default.createElement(_modal.default.Button, {
-    type: "button",
-    onClick: () => dispatch((0, _seats.confirmBooking)())
-  }, "Checking your account"))));
-}
-
-var _default = ConfirmationModalContainer;
-exports.default = _default;
-},{"react":"node_modules/react/index.js","react-redux":"node_modules/react-redux/es/index.js","../components/modal":"src/components/modal/index.js","../actions/modal":"src/actions/modal.js","../actions/seats":"src/actions/seats.js","../icons/icon_close.svg":"src/icons/icon_close.svg","../icons/tick.svg":"src/icons/tick.svg","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js"}],"src/containers/bookSeats.js":[function(require,module,exports) {
+},{}],"src/containers/bookSeats.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -58363,6 +58757,8 @@ var _reactRedux = require("react-redux");
 
 var _reactRouter = require("react-router");
 
+var _reactRouterDom = require("react-router-dom");
+
 var _available_seat = _interopRequireDefault(require("../icons/available_seat.svg"));
 
 var _unavailable_seat = _interopRequireDefault(require("../icons/unavailable_seat.svg"));
@@ -58371,13 +58767,17 @@ var _chosen_seat = _interopRequireDefault(require("../icons/chosen_seat.svg"));
 
 var _car_logo = _interopRequireDefault(require("../icons/car_logo.svg"));
 
+var _icon_close = _interopRequireDefault(require("../icons/icon_close.svg"));
+
+var _tick = _interopRequireDefault(require("../icons/tick.svg"));
+
 var _chooseSeats = _interopRequireDefault(require("../components/chooseSeats"));
 
-var _confirmationModal = _interopRequireDefault(require("./confirmationModal"));
+var _modal = _interopRequireDefault(require("../components/modal"));
 
 var _seats = require("../actions/seats");
 
-var _modal = require("../actions/modal");
+var _modal2 = require("../actions/modal");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -58385,9 +58785,10 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
+// import ConfirmationModalContainer from './confirmationModal';
 function BookSeatscontainer() {
-  const cities = (0, _reactRedux.useSelector)(state => state.cities);
-  console.log(cities);
+  const trips = (0, _reactRedux.useSelector)(state => state.trips);
+  console.log(trips);
   const chosenSeats = (0, _reactRedux.useSelector)(state => state.chosenSeats);
   console.log(chosenSeats);
   const showModal = (0, _reactRedux.useSelector)(state => state.showModal);
@@ -58397,24 +58798,32 @@ function BookSeatscontainer() {
     tripId
   } = (0, _reactRouter.useParams)();
   console.log(tripId);
-  const newCity = cities && cities.filter(city => city.id == tripId);
-  console.log(newCity);
+  const trip = trips && trips.filter(trip => trip.id == tripId);
+  console.log(trip);
   const [total, setTotal] = (0, _react.useState)(0);
   (0, _react.useEffect)(() => {
-    const totalAmount = newCity.reduce((total, seat) => {
+    const totalAmount = trip.reduce((total, seat) => {
       total += seat.price * chosenSeats.length;
       return total;
     }, 0);
     setTotal(totalAmount);
   }, [chosenSeats]);
+
+  function handleClicks() {
+    dispatch((0, _modal2.displayModal)(false));
+    dispatch((0, _modal2.confirmBooking)());
+    dispatch((0, _seats.bookTrips)(trip));
+  }
+
   return /*#__PURE__*/_react.default.createElement(_chooseSeats.default, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Heading, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.CarLogo, {
     src: _car_logo.default,
     alt: "Car Logo"
-  }), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Title, null, "Book a seat to: ", /*#__PURE__*/_react.default.createElement("span", null, newCity[0]?.destination))), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Pane, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Seats, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.SubHeading, null, "PICK A SEAT"), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.SeatsContainer, null, newCity[0]?.seats.map(seat => {
+  }), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Title, null, "Book a seat to: ", /*#__PURE__*/_react.default.createElement("span", null, trip[0]?.destination))), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Pane, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Seats, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.SubHeading, null, "PICK A SEAT"), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.SeatsContainer, null, trip[0]?.seats.map(seat => {
     function seatFunction() {
       if (chosenSeats.some(seatItem => seatItem.id === seat.id)) {
         return /*#__PURE__*/_react.default.createElement(_chooseSeats.default.SeatIcon, {
-          src: _chosen_seat.default
+          src: _chosen_seat.default,
+          onClick: () => dispatch((0, _seats.removeSeats)(seat))
         });
       } else {
         return /*#__PURE__*/_react.default.createElement(_chooseSeats.default.SeatIcon, {
@@ -58432,15 +58841,26 @@ function BookSeatscontainer() {
       src: _unavailable_seat.default,
       alt: "Seat"
     }));
-  }))), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.TripDetails, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.SubHeading, null, "TRIP INFORMATIONS:"), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.DetailContainer, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.List, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Key, null, "DepartureTime "), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Value, null, newCity[0]?.departureTime)), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.List, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Key, null, "Driver "), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Value, null, newCity[0]?.driverName)), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.List, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Key, null, "Driver's contact"), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Value, null, newCity[0]?.driverContact)), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.List, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Key, null, "Estimated duration "), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Value, null, newCity[0]?.estimatedDuration)), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.List, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Key, null, "Breaks"), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Value, null, newCity[0]?.breaks))), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Price, null, newCity[0]?.price, "Ar/seat"), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Button, {
+  }))), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.TripDetails, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.SubHeading, null, "TRIP INFORMATIONS:"), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.DetailContainer, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.List, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Key, null, "DepartureTime "), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Value, null, trip[0]?.departureTime)), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.List, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Key, null, "Driver "), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Value, null, trip[0]?.driverName)), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.List, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Key, null, "Driver's contact"), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Value, null, trip[0]?.driverContact)), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.List, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Key, null, "Estimated duration "), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Value, null, trip[0]?.estimatedDuration)), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.List, null, /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Key, null, "Breaks"), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Value, null, trip[0]?.breaks))), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Price, null, trip[0]?.price, "Ar/seat"), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.Button, {
     type: "button",
-    onClick: () => dispatch((0, _modal.displayModal)(true))
-  }, "Book ", chosenSeats.length, " seats"), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.TotalAmount, null, "TOTAL: ", total, "Ar"))), showModal && /*#__PURE__*/_react.default.createElement(_confirmationModal.default, null));
+    onClick: () => dispatch((0, _modal2.displayModal)(true))
+  }, "Book ", chosenSeats.length, " seats"), /*#__PURE__*/_react.default.createElement(_chooseSeats.default.TotalAmount, null, "TOTAL: ", total, "Ar"))), showModal && /*#__PURE__*/_react.default.createElement(_modal.default, null, /*#__PURE__*/_react.default.createElement(_modal.default.Wrapper, null, /*#__PURE__*/_react.default.createElement(_modal.default.IconClose, {
+    src: _icon_close.default,
+    onClick: () => dispatch((0, _modal2.displayModal)(false)),
+    alt: "Close"
+  }), /*#__PURE__*/_react.default.createElement(_modal.default.Heading, null, /*#__PURE__*/_react.default.createElement(_modal.default.IconTick, {
+    src: _tick.default
+  }), /*#__PURE__*/_react.default.createElement(_modal.default.Title, null, "BOOKING CONFIRMED!")), /*#__PURE__*/_react.default.createElement(_modal.default.Text, null, "Thank you for trusting our services. Your booking has been added to your account. You can review it there."), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Link, {
+    to: `/account/${trip[0]?.id}/`
+  }, /*#__PURE__*/_react.default.createElement(_modal.default.Button, {
+    type: "button",
+    onClick: () => handleClicks()
+  }, "Checking your account")))));
 }
 
 var _default = BookSeatscontainer;
 exports.default = _default;
-},{"react":"node_modules/react/index.js","react-redux":"node_modules/react-redux/es/index.js","react-router":"node_modules/react-router/esm/react-router.js","../icons/available_seat.svg":"src/icons/available_seat.svg","../icons/unavailable_seat.svg":"src/icons/unavailable_seat.svg","../icons/chosen_seat.svg":"src/icons/chosen_seat.svg","../icons/car_logo.svg":"src/icons/car_logo.svg","../components/chooseSeats":"src/components/chooseSeats/index.js","./confirmationModal":"src/containers/confirmationModal.js","../actions/seats":"src/actions/seats.js","../actions/modal":"src/actions/modal.js"}],"src/pages/bookSeats.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","react-redux":"node_modules/react-redux/es/index.js","react-router":"node_modules/react-router/esm/react-router.js","react-router-dom":"node_modules/react-router-dom/esm/react-router-dom.js","../icons/available_seat.svg":"src/icons/available_seat.svg","../icons/unavailable_seat.svg":"src/icons/unavailable_seat.svg","../icons/chosen_seat.svg":"src/icons/chosen_seat.svg","../icons/car_logo.svg":"src/icons/car_logo.svg","../icons/icon_close.svg":"src/icons/icon_close.svg","../icons/tick.svg":"src/icons/tick.svg","../components/chooseSeats":"src/components/chooseSeats/index.js","../components/modal":"src/components/modal/index.js","../actions/seats":"src/actions/seats.js","../actions/modal":"src/actions/modal.js"}],"src/pages/bookSeats.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -58494,7 +58914,7 @@ function App() {
   }, /*#__PURE__*/_react.default.createElement(_nextTrips.default, null)), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
     path: "/trip/:tripId"
   }, /*#__PURE__*/_react.default.createElement(_bookSeats.default, null)), /*#__PURE__*/_react.default.createElement(_reactRouterDom.Route, {
-    path: "/account"
+    path: "/account/:accountId"
   }, /*#__PURE__*/_react.default.createElement(_account.default, null))));
 }
 
@@ -58550,7 +58970,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51406" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59114" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

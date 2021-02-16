@@ -1,14 +1,16 @@
 import {combineReducers} from 'redux';
-import cities from './dataReducers';
+import trips from './dataReducers';
 import destination from './citiesReducers';
 import chosenSeats from './seatsReducers';
 import showModal from './modalReducers';
 import user from './userReducer';
+import bookedTrips from './tripsReducers';
 
 export default combineReducers({
-    cities,
+    trips,
     destination,
     chosenSeats,
     showModal,
     user,
+    bookedTrips,
 })
