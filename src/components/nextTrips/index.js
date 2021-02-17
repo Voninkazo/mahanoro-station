@@ -7,35 +7,35 @@ function NextTrips({children, ...restProps}) {
 }
 
 NextTrips.Clock = function NextTripsClock({children, ...restProps}) {
-    <Clock {...restProps} />
+     return <Clock {...restProps} />
 }
 
 NextTrips.Title = function NextTripsTitle({children, ...restProps}) {
-    <Title {...restProps}>{children}</Title>
+    return <Title {...restProps}>{children}</Title>
 }
 
 NextTrips.Wrapper = function NextTripsWrapper({children, ...restProps}) {
-    <Wrapper {...restProps}>{children}</Wrapper>
+    return <Wrapper {...restProps}>{children}</Wrapper>
 }
 
 NextTrips.CarLogo = function NextTripsCarLogo({children, ...restProps}) {
-    <CarLogo {...restProps} />
+    return <CarLogo {...restProps} />
 }
 
 NextTrips.ListContainer = function NextTripsListContainer({children, ...restProps}) {
-    <ListContainer {...restProps}>{children}</ListContainer>
+    return <ListContainer {...restProps}>{children}</ListContainer>
 }
 
 NextTrips.DepartureTime = function NextTripsDepartureTime({children, ...restProps}) {
-    <DepartureTime {...restProps}>{children}</DepartureTime>
+    return <DepartureTime {...restProps}>{children}</DepartureTime>
 }
 
 NextTrips.NumOfSeats = function NextTripsNumOfSeats({children, ...restProps}) {
-    <NumOfSeats {...restProps}>{children}</NumOfSeats>
+    return <NumOfSeats {...restProps}>{children}</NumOfSeats>
 }
 
 NextTrips.Button = function NextTripsButton({children, ...restProps}) {
-    <Button {...restProps}>{children}</Button>
+    return <Button {...restProps}>{children}</Button>
 }
 
 

@@ -1,61 +1,83 @@
 import React from 'react'
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
 import MyAccount from '../components/myAccount';
+
+import {setAccount, setFirstName, setLastName, setPhoneNumber} from '../actions/account';
+
 
 import Page from '../icons/page.svg';
 
 function AccountContainer() {
-    const user = useSelector(state => state.user);
-    console.log(user);
+    const account = useSelector(state => state.account);
+    console.log(account);
+
+    const bookedTrips = useSelector(state => state.bookedTrips);
+    console.log(bookedTrips)
+
+    const dispatch = useDispatch();
+
+    const upDatedAccount = {
+        firstName: account.firstName,
+        lastName: account.lastName,
+        phoneNumber: account.phoneNumber,
+        bookings: account.bookings
+    }
 
     const chosenSeats = useSelector(state => state.chosenSeats);
     console.log(chosenSeats);
-
-    const bookedTrips = useSelector(state => state.bookedTrips);
-    console.log(bookedTrips);
-
-    const trips = useSelector(state => state.trips);
-
-    const {accountId} = useParams();
-    console.log(accountId);
-
-    const myBooking = trips.find(booking => booking.id == accountId);
-    console.log(myBooking);
-
     return (
         <MyAccount>
             <MyAccount.PageLogo src={Page}/>
             <MyAccount.Title>My account:</MyAccount.Title>
             <MyAccount.UserInfo>
-                <MyAccount.FirstName>{user.firstName}</MyAccount.FirstName>
-                <MyAccount.LastName>{user.lastName}</MyAccount.LastName>
+                <MyAccount.FirstName>{account.firstName}</MyAccount.FirstName>
+                <MyAccount.LastName>{account.lastName}</MyAccount.LastName>
             </MyAccount.UserInfo>
            <MyAccount.Pane>
                <MyAccount.SubTitle>MY PERSONAL INFORMATIONS:</MyAccount.SubTitle>
-               <MyAccount.Form>
+               <MyAccount.Form onSubmit={(e) => {
+                   e.preventDefault();
+                   dispatch(setAccount(upDatedAccount))
+                   }}>
                    <MyAccount.InputContainer>
                        <MyAccount.ListItem>
                            <MyAccount.Label>First Name</MyAccount.Label>
-                           <MyAccount.InputText type="text" name="firstName" id="firstName" value={user.firstName}/>
+                           <MyAccount.InputText type="text"  value={account.firstName} onChange={(e) => dispatch(setFirstName(e.target.value))}/>
                        </MyAccount.ListItem>
                        <MyAccount.ListItem>
-                        <label>Last Name</label>
-                            <MyAccount.InputText type="text" name="lastName" id="lastName" value={user.lastName}/>
+                        <MyAccount.Label>Last Name</MyAccount.Label>
+                            <MyAccount.InputText type="text"  value={account.lastName} onChange={(e) => dispatch(setLastName(e.target.value))}/>
                         </MyAccount.ListItem>
                         <MyAccount.ListItem>
-                            <label>Phone Number</label>
-                            <MyAccountMyAccount.ListItemnputText type="text" name="phoneNumber" id="phoneNumber" value={user.phoneNumber}/>
+                            <MyAccount.Label>Phone Number</MyAccount.Label>
+                            <MyAccount.InputText type="text" value={account.phoneNumber} onChange={(e) => dispatch(setPhoneNumber(e.target.value))}/>
                         </MyAccount.ListItem>
                    </MyAccount.InputContainer>
-                   <MyAccount.ButtonSubmit>Update</MyAccount.ButtonSubmit>
+                   <MyAccount.ButtonSubmit type="submit">Update</MyAccount.ButtonSubmit>
                </MyAccount.Form>
            </MyAccount.Pane>
            <MyAccount.Pane>
                <MyAccount.SubTitle>MY BOOKINGS: </MyAccount.SubTitle>
                <MyAccount.Group>
-                  <p>{myBooking?.destination}</p>
-                   <p>{chosenSeats.length}</p>
+                  {
+                      bookedTrips?.map(trip => {
+                          return (
+                              <div key={trip.id}>
+                                  <div>
+                                    <p>{trip.destination}</p>
+                                    <p>{new Date(trip.departureTime).toLocaleDateString()}, {new Date(trip.departureTime).getHours()}:{new Date(trip.departureTime).getMinutes()}</p>
+                                  </div>
+                                  <div>
+                                    <p>{chosenSeats.length}seats</p>
+                                    <p>{chosenSeats.length * trip.price}Ar</p>
+                                  </div>
+                                  <div>
+                                      <button>Cancel</button>
+                                  </div>
+                              </div>
+                          )
+                      })
+                  }
                </MyAccount.Group>
            </MyAccount.Pane>
         </MyAccount>

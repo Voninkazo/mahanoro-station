@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
-
 import AvailbaleSeat from '../icons/available_seat.svg';
 import UnavailbaleSeat from '../icons/unavailable_seat.svg';
 import ChosenSeat from '../icons/chosen_seat.svg';
@@ -13,12 +12,11 @@ import TickIcon from '../icons/tick.svg';
 
 import ChooseSeats from '../components/chooseSeats';
 import Modal from '../components/modal';
-// import ConfirmationModalContainer from './confirmationModal';
 
-import { bookSeats, bookTrips } from '../actions/seats';
+import { bookSeats} from '../actions/seats';
 import {removeSeats} from '../actions/seats';
 import {displayModal} from '../actions/modal';
-import {confirmBooking} from '../actions/modal';
+import {confirmBooking} from '../actions/seats';
 
 function BookSeatscontainer() {
     const trips = useSelector(state => state.trips);
@@ -48,11 +46,9 @@ function BookSeatscontainer() {
         setTotal(totalAmount);
     }, [chosenSeats])
 
-
     function handleClicks() {
         dispatch(displayModal(false));
-        dispatch(confirmBooking());
-        dispatch(bookTrips(trip))
+        dispatch(confirmBooking(trip.id));
     }
 
     return (
@@ -73,13 +69,13 @@ function BookSeatscontainer() {
                                         src={
                                             ChosenSeat
                                         }
-                                        onClick={() => dispatch(removeSeats(seat))}
+                                        onClick={() => dispatch(removeSeats(seat.id))}
                                         />
                                     }
                                 else {
                                     return <ChooseSeats.SeatIcon
                                     src={AvailbaleSeat}
-                                    onClick={() => {dispatch(bookSeats(seat))}}
+                                    onClick={() => {dispatch(bookSeats(seat.id))}}
                                 />
                                 }
                                 }
@@ -102,7 +98,10 @@ function BookSeatscontainer() {
                     <ChooseSeats.DetailContainer>
                         <ChooseSeats.List>
                             <ChooseSeats.Key>DepartureTime </ChooseSeats.Key>
-                            <ChooseSeats.Value>{trip[0]?.departureTime}</ChooseSeats.Value>
+                            <ChooseSeats.Value>
+                                {new Date(trip[0]?.departureTime).getHours()}: {new Date(trip[0]?.departureTime).getMinutes()}, 
+                                {new Date(trip[0]?.departureTime).toLocaleDateString()}
+                            </ChooseSeats.Value>
                         </ChooseSeats.List>
                         <ChooseSeats.List>
                             <ChooseSeats.Key>Driver </ChooseSeats.Key>

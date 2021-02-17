@@ -1,7 +1,7 @@
 export default {
     trips: [],
     bookedTrips: [],
-    destination: [
+    destinations: [
         {   id: 0,
             city: "Antananarivo"
         }, 
@@ -16,7 +16,7 @@ export default {
         }
     ],
     chosenSeats: [],
-    user: {
+    account: {
         userId: 462786788299,
         firstName: "Me",
         lastName: "Somebody",

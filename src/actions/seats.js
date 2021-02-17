@@ -1,9 +1,19 @@
 export function bookSeats(seat) {
     return {
         type: "BOOK_SEATS",
-        payload: seat,
+        payload:seat
     }
 }
+
+// export function bookingSeats(seat, trip, user) {
+//     return {
+//         type: "BOOKING_SEATS",
+//         payload: seat,
+//         trip: trip,
+//         user: user,
+//     }
+// }
+
 
 export function bookTrips(trip) {
     return {
@@ -12,11 +22,6 @@ export function bookTrips(trip) {
     }
 }
 
-// export function  pickSeats() {
-//     return {
-//         type: "PICK_SEATS",
-//     }
-// }
 
 export function removeSeats(id) {
     return {
@@ -25,9 +30,12 @@ export function removeSeats(id) {
     }
 }
 
-export function  confirmBooking(seatId) {
+export function  confirmBooking(seatId, tripId) {
     return {
         type: "CONFIRM_BOOKING",
-        paylod: seatId,
+        payload: {
+            seatId: seatId,
+            tripId: tripId,
+        }   
     }
 }

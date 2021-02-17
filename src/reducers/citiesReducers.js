@@ -1,3 +1,3 @@
-export default function destination(state = [], action) {
+export default function destinations(state = [], action) {
     return state;
 }

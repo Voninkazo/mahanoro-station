@@ -4,9 +4,8 @@ import {useSelector} from 'react-redux';
 import { useParams } from 'react-router';
 
 import {getData} from '../actions/data';
-// import {bookTrips} from '../actions/seats';
+import {bookTrips} from '../actions/seats';
 import Clock from '../icons/clock.svg';
-import dateFormated from '../dateFormator';
 import NextTrips from '../components/nextTrips';
 import { Link } from 'react-router-dom';
 
@@ -14,9 +13,6 @@ export default function NextTripsContainer() {
 
     const trips = useSelector(state => state.trips);
     console.log(trips);
-
-    // const bookedTrips = useSelector(state => state.bookedTrips);
-    // console.log(bookedTrips);
 
     const dispatch = useDispatch();
 
@@ -30,6 +26,27 @@ export default function NextTripsContainer() {
         dispatch(getData());
     },[])
 
+    function getDay(day) {
+        switch (day) {
+            case 1:
+            return "Monday"
+            case 2:
+            return "Tuesday"
+            case 3:
+            return "Wednesday"
+            case 4:
+            return "Thursday"
+            case 5:
+            return "Friday"
+            case 6:
+            return "Saturday"
+            case 7:
+            return "Sunday"
+            default:
+                break;
+        }
+    }
+
     return (
         <NextTrips>
             <NextTrips.Clock src={Clock} alt="Clock"/>
@@ -40,7 +57,11 @@ export default function NextTripsContainer() {
                         <NextTrips.Wrapper key={trip.id}>
                             <NextTrips.CarLogo />
                             <NextTrips.ListContainer>
-                                <NextTrips.DepartureTime> {dateFormated(trip.departureTime)}</NextTrips.DepartureTime>
+                                <NextTrips.DepartureTime> 
+                                   <p>{getDay(new Date(trip.departureTime).getDay())}</p>
+                                    <p>{new Date(trip.departureTime).getHours()}: {new Date(trip.departureTime).getMinutes()}</p>
+                                </NextTrips.DepartureTime>
+                                <NextTrips.DepartureTime>{new Date(trip.departureTime).toLocaleDateString()}</NextTrips.DepartureTime>
                                 <NextTrips.NumOfSeats>
                                     {
                                     trip.seats.filter(seat => seat.isAvailable == true).length
@@ -50,6 +71,7 @@ export default function NextTripsContainer() {
                                 <>
                                 <Link to={`/trip/${trip.id}`}>
                                     <NextTrips.Button 
+                                        onClick={() => dispatch(bookTrips(trip, trip.id))}
                                         type="button" 
                                         disabled={trip.seats.filter(seat => seat.isAvailable == true).length === 0}
                                         >

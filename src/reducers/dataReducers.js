@@ -4,6 +4,6 @@ export default function trips(state = [], action) {
         return action.payload;
 
         default:
-            return state;
+            return state;   
     }
 }
