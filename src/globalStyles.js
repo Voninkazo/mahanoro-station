@@ -3,14 +3,23 @@ import { createGlobalStyle } from 'styled-components';
 export const GlobalStyles = createGlobalStyle`
 html {
     font-size: 16px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 body {
     margin: 0;
 }
 
+#root {
+    padding-bottom: 274px;
+}
+
 h1 {
-   
+   margin: 0,
+}
+
+h2 {
+    margin: 0
 }
 
 

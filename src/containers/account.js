@@ -6,6 +6,7 @@ import {setAccount, setFirstName, setLastName, setPhoneNumber} from '../actions/
 
 
 import Page from '../icons/page.svg';
+import {cancelTrip} from '../actions/seats';
 
 function AccountContainer() {
     const account = useSelector(state => state.account);
@@ -23,8 +24,12 @@ function AccountContainer() {
         bookings: account.bookings
     }
 
-    const chosenSeats = useSelector(state => state.chosenSeats);
-    console.log(chosenSeats);
+    const totalPrice = useSelector(state => state.seats.totalPrice);
+    console.log(totalPrice);
+
+    const bookedSeats = useSelector(state => state.seats.bookedSeats);
+    console.log(bookedSeats);
+
     return (
         <MyAccount>
             <MyAccount.PageLogo src={Page}/>
@@ -60,7 +65,7 @@ function AccountContainer() {
                <MyAccount.SubTitle>MY BOOKINGS: </MyAccount.SubTitle>
                <MyAccount.Group>
                   {
-                      bookedTrips?.map(trip => {
+                      bookedTrips.map(trip => {
                           return (
                               <div key={trip.id}>
                                   <div>
@@ -68,11 +73,11 @@ function AccountContainer() {
                                     <p>{new Date(trip.departureTime).toLocaleDateString()}, {new Date(trip.departureTime).getHours()}:{new Date(trip.departureTime).getMinutes()}</p>
                                   </div>
                                   <div>
-                                    <p>{chosenSeats.length}seats</p>
-                                    <p>{chosenSeats.length * trip.price}Ar</p>
+                                    <p>{bookedSeats}seats</p>
+                                    <p>{totalPrice}Ar</p>
                                   </div>
                                   <div>
-                                      <button>Cancel</button>
+                                      <button type="button" onClick={() => dispatch(cancelTrip(trip.id))}>Cancel</button>
                                   </div>
                               </div>
                           )

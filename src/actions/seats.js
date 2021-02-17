@@ -1,33 +1,37 @@
-export function bookSeats(seat) {
+export function getPrice(price) {
     return {
-        type: "BOOK_SEATS",
-        payload:seat
+        type: "GET_PRICE",
+        payload:price
     }
 }
 
-// export function bookingSeats(seat, trip, user) {
-//     return {
-//         type: "BOOKING_SEATS",
-//         payload: seat,
-//         trip: trip,
-//         user: user,
-//     }
-// }
+export function  pickSeats(seat) {
+    return {
+        type: "PICK_SEAT",
+        payload: seat,
+    }
+}
 
 
-export function bookTrips(trip) {
+export function bookTrips(trip,seat) {
     return {
         type: "BOOK_TRIP",
         payload: trip,
+        seat:seat,
     }
 }
 
+export function cancelTrip(id) {
+	return {
+		type: "CANCEL_TRIP",
+		payload: id
+	}
+}
 
-export function removeSeats(id) {
-    return {
-        type: "REMOVE_SEAT",
-        payload: id,
-    }
+export function resetSeats() {
+	return {
+		type: "RESET_SEATS",
+	}
 }
 
 export function  confirmBooking(seatId, tripId) {

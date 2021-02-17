@@ -13,17 +13,23 @@ import TickIcon from '../icons/tick.svg';
 import ChooseSeats from '../components/chooseSeats';
 import Modal from '../components/modal';
 
-import { bookSeats} from '../actions/seats';
-import {removeSeats} from '../actions/seats';
+import { getPrice,pickSeats, resetSeats, bookTrips} from '../actions/seats';
 import {displayModal} from '../actions/modal';
-import {confirmBooking} from '../actions/seats';
+// import {confirmBooking} from '../actions/seats';
+
 
 function BookSeatscontainer() {
     const trips = useSelector(state => state.trips);
     console.log(trips);
 
-    const chosenSeats = useSelector(state => state.chosenSeats);
-    console.log(chosenSeats);
+    const bookedSeats = useSelector(state => state.seats.bookedSeats);
+    console.log(bookedSeats);
+
+    const seats = useSelector(state => state.seats);
+    console.log(seats);
+
+    const totalPrice = useSelector(state => state.seats.totalPrice);
+    console.log(totalPrice);
 
     const showModal = useSelector(state => state.showModal);
     console.log(showModal);
@@ -33,22 +39,14 @@ function BookSeatscontainer() {
     const {tripId} = useParams();
     console.log(tripId);
 
-    const trip = trips && trips.filter(trip => trip.id == tripId)
+    const trip = trips.filter(trip => trip.id == tripId)
     console.log(trip);
-
-    const [total, setTotal] = useState(0);
-
-    useEffect(() => {
-        const totalAmount = trip.reduce((total, seat) => {
-            total += (seat.price) * chosenSeats.length;
-            return total;
-        }, 0);
-        setTotal(totalAmount);
-    }, [chosenSeats])
 
     function handleClicks() {
         dispatch(displayModal(false));
-        dispatch(confirmBooking(trip.id));
+        // dispatch(confirmBooking(trip.id));
+        // dispatch(resetSeats());
+        // dispatch(bookTrips(trip, seats));
     }
 
     return (
@@ -63,34 +61,19 @@ function BookSeatscontainer() {
                     <ChooseSeats.SeatsContainer>
                         {
                             trip[0]?.seats.map(seat => {
-                                function seatFunction() {
-                                    if(chosenSeats.some(seatItem => seatItem.id === seat.id )) {
-                                        return <ChooseSeats.SeatIcon
-                                        src={
-                                            ChosenSeat
-                                        }
-                                        onClick={() => dispatch(removeSeats(seat.id))}
-                                        />
-                                    }
-                                else {
-                                    return <ChooseSeats.SeatIcon
+                                return (
+                                seat.isAvailable ?
+                                 <ChooseSeats.SeatIcon
                                     src={AvailbaleSeat}
-                                    onClick={() => {dispatch(bookSeats(seat.id))}}
+                                    onClick={() => (
+                                        dispatch(getPrice(trip[0]?.price)),
+                                        dispatch(pickSeats())
+                                    )}
                                 />
-                                }
-                                }
-                               return (
-                                <ChooseSeats.SeatItem key={seat.id}>
-                                {
-                                    seat.isAvailable ? seatFunction()
-                                     :
-                                    <ChooseSeats.SeatIcon src={UnavailbaleSeat} alt="Seat" />
-                                }
-                                </ChooseSeats.SeatItem>
-                               )
-                            })  
-                        }   
-                        
+                                    :
+                                <ChooseSeats.SeatIcon src={UnavailbaleSeat} alt="Seat" />
+                                )
+})}
                     </ChooseSeats.SeatsContainer>
                 </ChooseSeats.Seats>
                 <ChooseSeats.TripDetails>
@@ -125,9 +108,9 @@ function BookSeatscontainer() {
                         type="button"
                         onClick={() => dispatch(displayModal(true))} 
                     >
-                        Book {chosenSeats.length} seats
+                        Book {bookedSeats} seats
                     </ChooseSeats.Button>
-                        <ChooseSeats.TotalAmount>TOTAL: {total}Ar</ChooseSeats.TotalAmount>
+                        <ChooseSeats.TotalAmount>TOTAL: {totalPrice}Ar</ChooseSeats.TotalAmount>
                 </ChooseSeats.TripDetails>
             </ChooseSeats.Pane>
             {

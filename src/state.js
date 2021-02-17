@@ -15,7 +15,10 @@ export default {
             city: "Vatomandry"
         }
     ],
-    chosenSeats: [],
+    seats: {
+        totalPrice: 0,
+        bookedSeats: 0,
+    },
     account: {
         userId: 462786788299,
         firstName: "Me",

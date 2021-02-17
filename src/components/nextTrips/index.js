@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Container, Clock, Title, Wrapper, CarLogo, ListContainer, DepartureTime, NumOfSeats, Button, } from './styles/nextTrips';
+import {Container, Clock, Title, Wrapper, CarLogo,Pane, Destination, ListContainer, DepartureTime, NumOfSeats, Button, } from './styles/nextTrips';
 
 function NextTrips({children, ...restProps}) {
     return <Container {...restProps}>{children}</Container>
@@ -16,6 +16,14 @@ NextTrips.Title = function NextTripsTitle({children, ...restProps}) {
 
 NextTrips.Wrapper = function NextTripsWrapper({children, ...restProps}) {
     return <Wrapper {...restProps}>{children}</Wrapper>
+}
+
+NextTrips.Destination = function NextTripsDestination({children, ...restProps}) {
+    return <Destination {...restProps}>{children}</Destination>
+}
+
+NextTrips.Pane = function NextTripsPane({children, ...restProps}) {
+    return <Pane {...restProps}>{children}</Pane>
 }
 
 NextTrips.CarLogo = function NextTripsCarLogo({children, ...restProps}) {

@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 
 import {getData} from '../actions/data';
 import {bookTrips} from '../actions/seats';
-import Clock from '../icons/clock.svg';
+import Clock from '../images/clock.jpg'
 import NextTrips from '../components/nextTrips';
 import { Link } from 'react-router-dom';
 
@@ -13,6 +13,8 @@ export default function NextTripsContainer() {
 
     const trips = useSelector(state => state.trips);
     console.log(trips);
+    const seats = useSelector(state => state.seats);
+    console.log(seats);
 
     const dispatch = useDispatch();
 
@@ -49,8 +51,10 @@ export default function NextTripsContainer() {
 
     return (
         <NextTrips>
-            <NextTrips.Clock src={Clock} alt="Clock"/>
-            <NextTrips.Title>Next trips to {dest}</NextTrips.Title>
+            <NextTrips.Pane>
+                <NextTrips.Clock src={Clock} alt="Clock"/>
+                <NextTrips.Title>Next trips to: <br/> <span>{dest}</span></NextTrips.Title>
+            </NextTrips.Pane>
             {
                 nextTrips.map(trip => {
                     return (
@@ -71,7 +75,7 @@ export default function NextTripsContainer() {
                                 <>
                                 <Link to={`/trip/${trip.id}`}>
                                     <NextTrips.Button 
-                                        onClick={() => dispatch(bookTrips(trip, trip.id))}
+                                        onClick={() => dispatch(bookTrips(trip,seats ))}
                                         type="button" 
                                         disabled={trip.seats.filter(seat => seat.isAvailable == true).length === 0}
                                         >
